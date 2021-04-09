@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Firefox Form Autofill CheckValidity() Bug</title>
+	</head>
+	<body>
+		<script type="module">
+            import { html, render, useState, useRef } from 'https://unpkg.com/htm/preact/standalone.module.js'
+
+            const app = () => {
+              const [email, setEmail] = useState('');
+              const [password, setPassword] = useState('');
+              const formRef = useRef();
+              
+              const submit = async (e) => {
+                e.preventDefault();
+                if (!formRef.current?.checkValidity()) return;
+                console.log('Valid');
+              };
+              
+              return html`
+                <form ref=${formRef} onSubmit=${submit}>
+                  <input
+                    type="email"
+                    required
+                    value=${email}
+                    oninput=${e => setEmail(e.target.value)}
+                  />
+                  <input
+                    type="password"
+                    minlength=8
+                    pattern=".{8,}"
+                    value=${password}
+                    oninput=${e => setPassword(e.target.value)}
+                  />
+                  <button>Submit</button>
+                </form>
+              `
+            }
+
+            render(html`<${app} />`, document.body)
+        </script>
+	</body>
+</html>
